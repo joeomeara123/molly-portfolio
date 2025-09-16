@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molly O'Meara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header-section">
+        <div class="theme-toggle" id="themeToggle">
+            <div class="toggle-slider">
+                <svg class="toggle-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg class="toggle-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+            </div>
+        </div>
+        <header class="gradient-header"></header>
+    </div>
+    <div id="mainContent" class="container">
+        <!-- Loader positioned where name will be -->
+        <div id="loader" class="loader-name-position">
+            <div id="loaderPercentage" class="loader-percentage">0%</div>
+        </div>
+
+        <h1 id="hyperText" class="hyper-text" style="font-size: 18px !important; opacity: 0;">Molly O'Meara</h1>
+
+        <div id="bodyContent" style="opacity: 0;">
+            <p class="blurred-stagger" style="font-size: 12px !important;">I'm a 16-year-old student passionate about technology and design. I'm exploring opportunities in digital media, web development, and creative projects.</p>
+
+            <p class="blurred-stagger" style="font-size: 12px !important;">Growing up in a tech-savvy family has given me early exposure to digital innovation and creative problem-solving. I'm currently pursuing my studies while building skills in programming, design, and digital marketing. I'm excited about the intersection of technology and creativity, and how young people can make an impact in the digital world.</p>
+
+            <p style="font-size: 12px !important;">In my free time, I enjoy learning new technologies, working on creative projects, and exploring social media trends. I'm always looking for opportunities to collaborate and learn from others.</p>
+
+            <p style="font-size: 12px !important;">I'm currently working on building my portfolio and exploring internship opportunities in tech and creative industries.</p>
+
+            <div class="links">
+                <a href="mailto:molly@example.com">Email</a><br>
+                <a href="https://instagram.com/mollyomeara" target="_blank">Instagram</a><br>
+                <a href="https://linkedin.com/in/mollyomeara" target="_blank">LinkedIn</a><br>
+                <a href="https://github.com/mollyomeara" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // HyperText Animation
+        class HyperText {
+            constructor(element, options = {}) {
+                this.element = element;
+                this.originalText = element.textContent;
+                this.chars = this.originalText.split('');
+                this.duration = options.duration || 800;
+                this.delay = options.delay || 0;
+                this.characterSet = options.characterSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+                this.animateOnHover = options.animateOnHover !== false;
+                this.isAnimating = false;
+
+                this.init();
+            }
+
+            init() {
+                if (this.animateOnHover) {
+                    this.element.addEventListener('mouseenter', () => this.animate());
+                }
+
+                // Initial animation after delay
+                setTimeout(() => this.animate(), this.delay);
+            }
+
+            getRandomChar() {
+                return this.characterSet[Math.floor(Math.random() * this.characterSet.length)];
+            }
+
+            animate() {
+                if (this.isAnimating) return;
+                this.isAnimating = true;
+
+                const startTime = performance.now();
+                const maxIterations = this.chars.length;
+
+                const animateFrame = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / this.duration, 1);
+                    const currentIteration = progress * maxIterations;
+
+                    const displayChars = this.chars.map((char, index) => {
+                        if (char === ' ') return char;
+                        if (index <= currentIteration) return this.originalText[index];
+                        return this.getRandomChar();
+                    });
+
+                    this.element.textContent = displayChars.join('');
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animateFrame);
+                    } else {
+                        this.element.textContent = this.originalText;
+                        this.isAnimating = false;
+                    }
+                };
+
+                requestAnimationFrame(animateFrame);
+            }
+        }
+
+        // Smooth Gradient Animation
+        class GradientAnimator {
+            constructor(element) {
+                this.element = element;
+                this.colors = [
+                    ['#FF69B4', '#FFE4E1'], // Pink to Light Pink
+                    ['#FFE4E1', '#9370DB'], // Light Pink to Purple
+                    ['#9370DB', '#20B2AA'], // Purple to Teal
+                    ['#20B2AA', '#FF69B4']  // Teal to Pink
+                ];
+                this.currentIndex = 0;
+                this.isAnimating = false;
+                this.animate();
+            }
+
+            animate() {
+                const duration = 3000; // 3 seconds per transition
+                const steps = 60; // 60 steps for smooth animation
+                const stepDuration = duration / steps;
+
+                const animateToNext = () => {
+                    if (this.isAnimating) return;
+                    this.isAnimating = true;
+
+                    const currentColors = this.colors[this.currentIndex];
+                    const nextIndex = (this.currentIndex + 1) % this.colors.length;
+                    const nextColors = this.colors[nextIndex];
+
+                    let step = 0;
+
+                    const stepAnimation = () => {
+                        const progress = step / steps;
+
+                        // Interpolate between current and next colors
+                        const color1 = this.interpolateColor(currentColors[0], nextColors[0], progress);
+                        const color2 = this.interpolateColor(currentColors[1], nextColors[1], progress);
+
+                        this.element.style.background = `linear-gradient(90deg, ${color1} 0%, ${color2} 100%)`;
+
+                        step++;
+
+                        if (step <= steps) {
+                            setTimeout(stepAnimation, stepDuration);
+                        } else {
+                            this.currentIndex = nextIndex;
+                            this.isAnimating = false;
+                            setTimeout(animateToNext, 1000); // 1 second pause between transitions
+                        }
+                    };
+
+                    stepAnimation();
+                };
+
+                animateToNext();
+            }
+
+            // Helper function to interpolate between two hex colors
+            interpolateColor(color1, color2, factor) {
+                const rgb1 = this.hexToRgb(color1);
+                const rgb2 = this.hexToRgb(color2);
+
+                const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * factor);
+                const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * factor);
+                const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * factor);
+
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+
+            hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+        }
+
+        // Text Reveal Animation using CSS clip-path
+        class TextReveal {
+            constructor(elements, options = {}) {
+                console.log('TextReveal constructor called with:', elements);
+                this.elements = elements.length ? Array.from(elements) : [elements];
+                console.log('Converted to array:', this.elements.length, 'elements');
+                this.delay = options.delay || 0;
+                this.staggerDelay = options.staggerDelay || 200;
+                this.init();
+            }
+
+            init() {
+                console.log('Init called, processing', this.elements.length, 'elements');
+
+                this.elements.forEach((element, elemIndex) => {
+                    const text = element.textContent || '';
+                    console.log('Processing element', elemIndex, 'with text length:', text.length);
+
+                    if (text.length === 0) {
+                        console.log('Skipping element with no text');
+                        return;
+                    }
+
+                    // Add container and text reveal classes
+                    element.classList.add('text-reveal-container');
+                    element.innerHTML = `<span class="text-reveal">${text}</span>`;
+
+                    // Set animation delay for staggered effect
+                    const revealSpan = element.querySelector('.text-reveal');
+                    revealSpan.style.animationDelay = `${this.delay + (elemIndex * this.staggerDelay)}ms`;
+
+                    console.log('Applied text reveal to element', elemIndex, 'with delay:', this.delay + (elemIndex * this.staggerDelay));
+                });
+            }
+        }
+
+        // Percentage Loader Animation
+        function animateLoader() {
+            const percentageElement = document.querySelector('.loader-percentage');
+            const loader = document.querySelector('.loader-name-position');
+
+            let currentPercentage = 0;
+            const struggleStartAt = 85;
+            const targetPercentage = 100;
+            const initialDuration = 1800; // 1.8 seconds to reach 85%
+            const increment = struggleStartAt / (initialDuration / 16); // 60fps
+            let inStruggleMode = false;
+            let strugglePercentage = struggleStartAt;
+
+            // Timing for struggle phase (85% to 100%)
+            const struggleDelays = [300, 250, 200, 180, 150, 120, 100, 80, 60, 50, 40, 30, 25, 20, 15]; // 15 steps from 85% to 100%
+            let struggleStep = 0;
+
+            function updateCounter() {
+                if (!inStruggleMode) {
+                    currentPercentage += increment;
+
+                    // Start struggle mode at 85%
+                    if (currentPercentage >= struggleStartAt) {
+                        currentPercentage = struggleStartAt;
+                        inStruggleMode = true;
+                        startStruggleMode();
+                        return;
+                    }
+                } else {
+                    // Struggle mode is handled by setTimeout chain
+                    return;
+                }
+
+                // Update percentage display
+                percentageElement.textContent = Math.floor(currentPercentage) + '%';
+
+                if (currentPercentage < struggleStartAt) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+
+            function startStruggleMode() {
+                function incrementStruggle() {
+                    if (strugglePercentage < targetPercentage) {
+                        strugglePercentage++;
+                        percentageElement.textContent = strugglePercentage + '%';
+
+                        // Get delay for next increment (starts slow, gets faster)
+                        const delay = struggleDelays[struggleStep] || 20;
+                        struggleStep++;
+
+                        setTimeout(incrementStruggle, delay);
+                    } else {
+                        // Completed! Start text reveal
+                        setTimeout(() => {
+                            loader.style.opacity = '0';
+                            startTextReveal();
+                        }, 300);
+                    }
+                }
+
+                // Start the struggle sequence
+                setTimeout(incrementStruggle, 200);
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Function to start text reveal animations
+        function startTextReveal() {
+            // Show the name
+            const hyperTextElement = document.getElementById('hyperText');
+            if (hyperTextElement) {
+                hyperTextElement.style.transition = 'opacity 0.5s ease';
+                hyperTextElement.style.opacity = '1';
+
+                // Initialize HyperText animation
+                new HyperText(hyperTextElement, {
+                    duration: 1000,
+                    delay: 200,
+                    animateOnHover: true
+                });
+            }
+
+            // Show body content after name appears
+            setTimeout(() => {
+                const bodyContent = document.getElementById('bodyContent');
+                if (bodyContent) {
+                    bodyContent.style.transition = 'opacity 0.5s ease';
+                    bodyContent.style.opacity = '1';
+                }
+            }, 500);
+
+            // Initialize gradient animation
+            const gradientElement = document.querySelector('.gradient-header');
+            if (gradientElement) {
+                new GradientAnimator(gradientElement);
+            }
+
+            // Initialize text reveal animation
+            const textRevealElements = document.querySelectorAll('p.blurred-stagger');
+            if (textRevealElements.length > 0) {
+                new TextReveal(textRevealElements, {
+                    delay: 1300,
+                    staggerDelay: 200
+                });
+            }
+        }
+
+        // Start loading animation when page loads
+        window.addEventListener('load', animateLoader);
+    </script>
+</body>
+</html>
